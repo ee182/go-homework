@@ -1,44 +1,44 @@
 package karatsuba
 
-// Multiplication will give you the multiplication
+// NormalMultiplication will give you the multiplication
 // of two numbers, by means of a smart recursive algorithm
-// func Multiplication(a []int, b []int) []int {
-// 	if len(a) == 0 || len(b) == 0 {
-// 		return []int{0}
-// 	}
+func NormalMultiplication(a []int, b []int) []int {
+	if len(a) == 0 || len(b) == 0 {
+		return []int{0}
+	}
 
-// 	if len(a) == 1 && len(b) == 1 {
-// 		ans := a[0] * b[0]
-// 		ret := []int{}
+	if len(a) == 1 && len(b) == 1 {
+		ans := a[0] * b[0]
+		ret := []int{}
 
-// 		if ans/10 != 0 {
-// 			ret = []int{ans / 10, ans - ans/10*10}
-// 		} else {
-// 			ret = []int{ans}
-// 		}
+		if ans/10 != 0 {
+			ret = []int{ans / 10, ans - ans/10*10}
+		} else {
+			ret = []int{ans}
+		}
 
-// 		return ret
-// 	}
+		return ret
+	}
 
-// 	k := min(len(a)/2, len(b)/2)
-// 	if k == 0 {
-// 		k = 1
-// 	}
+	k := min(len(a)/2, len(b)/2)
+	if k == 0 {
+		k = 1
+	}
 
-// 	high := k * 2
+	high := k * 2
 
-// 	A := a[0 : len(a)-k]
-// 	B := a[len(a)-k : len(a)]
-// 	C := b[0 : len(b)-k]
-// 	D := b[len(b)-k : len(b)]
+	A := a[0 : len(a)-k]
+	B := a[len(a)-k : len(a)]
+	C := b[0 : len(b)-k]
+	D := b[len(b)-k : len(b)]
 
-// 	AC := Multiplication(A, C)
-// 	BD := Multiplication(B, D)
-// 	AD := Multiplication(A, D)
-// 	BC := Multiplication(B, C)
+	AC := NormalMultiplication(A, C)
+	BD := NormalMultiplication(B, D)
+	AD := NormalMultiplication(A, D)
+	BC := NormalMultiplication(B, C)
 
-// 	return add(padZeros(AC, high), add(padZeros(add(AD, BC), k), BD))
-// }
+	return add(padZeros(AC, high), add(padZeros(add(AD, BC), k), BD))
+}
 
 // Multiplication will give you the multiplication
 // of two numbers, by means of Karatsuba algorithm
@@ -157,27 +157,20 @@ func sub(a []int, b []int) []int {
 		a = prePadZeros(a, len(b)-len(a))
 	}
 
+	carry := 0
 	ans := make([]int, len(a), len(a))
 
-	most := a[0] - b[0]
-	for i := 1; i < len(a); i++ {
-		digit := a[i] - b[i]
+	for i := len(a) - 1; i >= 0; i-- {
+		digit := a[i] - b[i] + carry
 		if digit < 0 {
 			digit = 10 + digit
-			most = most - 1
+			carry = -1
+		} else {
+			carry = 0
 		}
 
-		if most < 0 {
-			most = 10 + most
-			ans[i-2] = ans[i-2] - 1
-		}
-
-		ans[i-1] = most
-
-		most = digit
+		ans[i] = digit
 	}
-
-	ans[len(a)-1] = most
 
 	return ans
 }
