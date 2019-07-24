@@ -1,34 +1,81 @@
 package karatsuba
 
-import "math"
-
 // Multiplication will give you the multiplication
 // of two numbers, by means of a smart recursive algorithm
+// func Multiplication(a []int, b []int) []int {
+// 	if len(a) == 0 || len(b) == 0 {
+// 		return []int{0}
+// 	}
+
+// 	if len(a) == 1 && len(b) == 1 {
+// 		ans := a[0] * b[0]
+// 		ret := []int{}
+
+// 		if ans/10 != 0 {
+// 			ret = []int{ans / 10, ans - ans/10*10}
+// 		} else {
+// 			ret = []int{ans}
+// 		}
+
+// 		return ret
+// 	}
+
+// 	k := min(len(a)/2, len(b)/2)
+// 	if k == 0 {
+// 		k = 1
+// 	}
+
+// 	high := k * 2
+
+// 	A := a[0 : len(a)-k]
+// 	B := a[len(a)-k : len(a)]
+// 	C := b[0 : len(b)-k]
+// 	D := b[len(b)-k : len(b)]
+
+// 	AC := Multiplication(A, C)
+// 	BD := Multiplication(B, D)
+// 	AD := Multiplication(A, D)
+// 	BC := Multiplication(B, C)
+
+// 	return add(padZeros(AC, high), add(padZeros(add(AD, BC), k), BD))
+// }
+
+// Multiplication will give you the multiplication
+// of two numbers, by means of Karatsuba algorithm
 func Multiplication(a []int, b []int) []int {
 	if len(a) == 0 || len(b) == 0 {
 		return []int{0}
 	}
 
 	if len(a) == 1 && len(b) == 1 {
-		return ToDigits(a[0] * b[0])
+		ans := a[0] * b[0]
+		ret := []int{}
+
+		if ans/10 != 0 {
+			ret = []int{ans / 10, ans - ans/10*10}
+		} else {
+			ret = []int{ans}
+		}
+
+		return ret
 	}
 
-	var k = min(len(a)/2, len(b)/2)
+	k := min(len(a)/2, len(b)/2)
 	if k == 0 {
 		k = 1
 	}
 
-	var high = k * 2
+	high := k * 2
 
-	var A = a[0 : len(a)-k]
-	var B = a[len(a)-k : len(a)]
-	var C = b[0 : len(b)-k]
-	var D = b[len(b)-k : len(b)]
+	A := a[0 : len(a)-k]
+	B := a[len(a)-k : len(a)]
+	C := b[0 : len(b)-k]
+	D := b[len(b)-k : len(b)]
 
-	var AC = Multiplication(A, C)
-	var BD = Multiplication(B, D)
-	var ApBCpD = Multiplication(add(A, B), add(C, D))
-	var ADpBC = sub(sub(ApBCpD, AC), BD)
+	AC := Multiplication(A, C)
+	BD := Multiplication(B, D)
+	ApBCpD := Multiplication(add(A, B), add(C, D))
+	ADpBC := sub(sub(ApBCpD, AC), BD)
 
 	return add(padZeros(AC, high), add(padZeros(ADpBC, k), BD))
 }
@@ -41,35 +88,106 @@ func min(x, y int) int {
 	return y
 }
 
-// TODO: do add() digit by digit instead of using native arithmetics
+func addSingle(a int, b int, c int) (int, int) {
+	ans := a + b + c
+	return ans / 10, ans - ans/10*10
+}
+
 func add(a []int, b []int) []int {
-	return ToDigits(ToNumbers(a) + ToNumbers(b))
+	if len(a) > len(b) {
+		b = prePadZeros(b, len(a)-len(b))
+	}
+
+	if len(b) > len(a) {
+		a = prePadZeros(a, len(b)-len(a))
+	}
+
+	carry := 0
+	least := 0
+	ans := make([]int, len(a), len(a))
+
+	for i := len(a) - 1; i >= 0; i-- {
+		carry, least = addSingle(carry, a[i], b[i])
+		ans[i] = least
+	}
+
+	if carry != 0 {
+		ans = append([]int{carry}, ans...)
+	}
+
+	return ans
 }
 
-// TODO: do sub() digit by digit instead of using native arithmetics
+func larger(a []int, b []int) bool {
+	if len(a) > len(b) {
+		b = prePadZeros(b, len(a)-len(b))
+	}
+
+	if len(b) > len(a) {
+		a = prePadZeros(a, len(b)-len(a))
+	}
+
+	for i := 0; i < len(a); i++ {
+		if a[i] < b[i] {
+			return false
+		}
+
+		if a[i] == b[i] {
+			continue
+		}
+
+		if a[i] > b[i] {
+			return true
+		}
+	}
+
+	return false
+}
+
 func sub(a []int, b []int) []int {
-	return ToDigits(ToNumbers(a) - ToNumbers(b))
-}
-
-// ToDigits ... remove please
-func ToDigits(i int) []int {
-	ans := []int{}
-	for i > 0 {
-		ans = append([]int{i - i/10*10}, ans...)
-		i = i / 10
+	if larger(b, a) {
+		return []int{-1}
 	}
+
+	if len(a) > len(b) {
+		b = prePadZeros(b, len(a)-len(b))
+	}
+
+	if len(b) > len(a) {
+		a = prePadZeros(a, len(b)-len(a))
+	}
+
+	ans := make([]int, len(a), len(a))
+
+	most := a[0] - b[0]
+	for i := 1; i < len(a); i++ {
+		digit := a[i] - b[i]
+		if digit < 0 {
+			digit = 10 + digit
+			most = most - 1
+		}
+
+		if most < 0 {
+			most = 10 + most
+			ans[i-2] = ans[i-2] - 1
+		}
+
+		ans[i-1] = most
+
+		most = digit
+	}
+
+	ans[len(a)-1] = most
 
 	return ans
 }
 
-// ToNumbers ... remove please
-func ToNumbers(i []int) int {
-	var ans = 0
-	for index, element := range i {
-		ans = ans + element*int(math.Pow10(len(i)-index-1))
+func prePadZeros(a []int, n int) []int {
+	for i := 0; i < n; i++ {
+		a = append([]int{0}, a...)
 	}
 
-	return ans
+	return a
 }
 
 func padZeros(a []int, n int) []int {
