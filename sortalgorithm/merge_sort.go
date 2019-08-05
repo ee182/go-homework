@@ -1,8 +1,5 @@
 package sortalgorithm
 
-const _MaxUint = ^uint(0)
-const _MaxInt = int(_MaxUint >> 1)
-
 // MergeSort sorts the array of integers
 func MergeSort(xs []int) []int {
 	if len(xs) == 1 {
