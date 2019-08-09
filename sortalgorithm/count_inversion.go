@@ -19,6 +19,8 @@ func MergeAndCount(xs []int, ys []int) ([]int, int) {
 	ny := len(ys)
 	n := nx + ny
 
+	splitInv := 0
+
 	ans := make([]int, n, n)
 	i, j := 0, 0
 
@@ -33,14 +35,15 @@ func MergeAndCount(xs []int, ys []int) ([]int, int) {
 			break
 		}
 
-		if xs[i] < ys[j] {
+		if xs[i] > ys[j] {
+			ans[k] = ys[j]
+			splitInv = splitInv + nx - i
+			j++
+		} else {
 			ans[k] = xs[i]
 			i++
-		} else {
-			ans[k] = ys[j]
-			j++
 		}
 	}
 
-	return ans, 0
+	return ans, splitInv
 }
