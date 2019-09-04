@@ -1,5 +1,12 @@
 package week2opt
 
+// Cell is the struct used in Find2ndLargest
+type Cell struct {
+	large    int
+	small    int
+	backCell *Cell
+}
+
 // Find2ndLargest finds the second-largest number in the array,
 // and that uses at most n + lg n - 2 comparisons.
 // 1.
