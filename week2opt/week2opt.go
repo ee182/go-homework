@@ -68,6 +68,33 @@ func splitLargeSmall(a []int, prevBase int) ([]int, []int, []int) {
 	return larges, smalls, backs
 }
 
+// ComputeModalElement computes the maximum element of unimodal array (elements are distinct)
+// in O(lg n) time
+// 2.
+func ComputeModalElement(a []int) int {
+	n := len(a)
+
+	if n == 1 {
+		return a[0]
+	}
+
+	if n == 2 {
+		if a[0] > a[1] {
+			return a[0]
+		}
+
+		return a[1]
+	}
+
+	mid := n / 2
+
+	if a[mid] > a[mid+1] {
+		return ComputeModalElement(a[0 : mid+1])
+	}
+
+	return ComputeModalElement(a[mid+1 : n])
+}
+
 // ValueEqIndex checks whether or not there is an index i such that A[i] = i
 // 3.
 func ValueEqIndex(a []int, idx []int) (bool, int) {
