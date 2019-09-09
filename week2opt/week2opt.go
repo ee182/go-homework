@@ -118,3 +118,9 @@ func ValueEqIndex(a []int, idx []int) (bool, int) {
 
 	return true, idx[middleI]
 }
+
+// ComputeLocalMinimum computes one local minimum in a n by n grid
+// 3.
+func ComputeLocalMinimum(a [][]int) int {
+	return 0
+}
