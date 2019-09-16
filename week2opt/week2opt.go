@@ -120,7 +120,7 @@ func ValueEqIndex(a []int, idx []int) (bool, int) {
 }
 
 // ComputeLocalMinimum computes one local minimum in a n by n grid
-// 3.
+// 4.
 func ComputeLocalMinimum(a [][]int) int {
 	return 0
 }
