@@ -1,6 +1,8 @@
 package week2opt
 
-import "github.com/cznic/mathutil"
+import (
+	"github.com/cznic/mathutil"
+)
 
 // Find2ndLargest finds the second-largest number in the array,
 // and that uses at most n + lg n - 2 comparisons.
@@ -127,6 +129,15 @@ func ComputeLocalMinimum(fullArr [][]int) []int {
 }
 
 func computeLocalMinimum(fullArr [][]int, coords [][]coordinate) []int {
+	e, o := splitEvenOdd(coords)
+
+	even := reallyComputeLocalMinimum(fullArr, e)
+	odd := reallyComputeLocalMinimum(fullArr, o)
+
+	return append(even, odd...)
+}
+
+func reallyComputeLocalMinimum(fullArr [][]int, coords [][]coordinate) []int {
 	ret := make([]int, 0, 0)
 
 	for i := range coords {
@@ -158,6 +169,54 @@ func smallerThanList(value int, list []coordinate, fullArr [][]int) bool {
 	}
 
 	return true
+}
+
+func splitEvenOdd(a [][]coordinate) (e [][]coordinate, o [][]coordinate) {
+	e = make([][]coordinate, len(a)/2)
+	o = make([][]coordinate, len(a)/2)
+
+	for i := 0; i < len(a)/2; i++ {
+		e[i] = make([]coordinate, len(a[0])/2)
+		o[i] = make([]coordinate, len(a[0])/2)
+	}
+
+	for i := 0; i < len(a); i = i + 2 {
+		for j := 0; j < len(a[0]); j = j + 2 {
+			o[i/2][j/2] = a[i][j]
+		}
+	}
+
+	for i := 0; i < len(a); i = i + 2 {
+		for j := 0; j < len(a[0]); j = j + 2 {
+			e[i/2][j/2] = a[i+1][j+1]
+		}
+	}
+
+	return e, o
+}
+
+func splitOddEven(a [][]coordinate) (o [][]coordinate, e [][]coordinate) {
+	e = make([][]coordinate, len(a)/2)
+	o = make([][]coordinate, len(a)/2)
+
+	for i := 0; i < len(a)/2; i++ {
+		e[i] = make([]coordinate, len(a[0])/2)
+		o[i] = make([]coordinate, len(a[0])/2)
+	}
+
+	for i := 0; i < len(a); i = i + 2 {
+		for j := 0; j < len(a[0]); j = j + 2 {
+			o[i/2][j/2] = a[i][j+1]
+		}
+	}
+
+	for i := 0; i < len(a); i = i + 2 {
+		for j := 0; j < len(a[0]); j = j + 2 {
+			e[i/2][j/2] = a[i+1][j]
+		}
+	}
+
+	return o, e
 }
 
 func makeCoordinate(a [][]int) [][]coordinate {
