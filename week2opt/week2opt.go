@@ -121,6 +121,136 @@ func ValueEqIndex(a []int, idx []int) (bool, int) {
 
 // ComputeLocalMinimum computes one local minimum in a n by n grid
 // 4.
-func ComputeLocalMinimum(a [][]int) int {
-	return 0
+func ComputeLocalMinimum(fullArr [][]int) []int {
+	coords := makeCoordinate(fullArr)
+	return computeLocalMinimum(fullArr, coords)
+}
+
+func computeLocalMinimum(fullArr [][]int, coords [][]coordinate) []int {
+	ret := make([]int, 0, 0)
+
+	for i := range coords {
+		for j := range coords[i] {
+			list := compareList(coords[i][j], fullArr)
+
+			value := fullArr[coords[i][j].x][coords[i][j].y]
+			isLocalMin := true
+
+			for k := range list {
+				compareValue := fullArr[list[k].x][list[k].y]
+
+				if value > compareValue {
+					isLocalMin = false
+					break
+				}
+			}
+
+			if isLocalMin == true {
+				ret = append(ret, value)
+			}
+		}
+	}
+
+	return ret
+}
+
+type coordinate struct {
+	x int
+	y int
+}
+
+func makeCoordinate(a [][]int) [][]coordinate {
+	coords := make([][]coordinate, len(a))
+
+	for i := range a {
+		coords[i] = make([]coordinate, len(a[0]))
+
+		for j := range a[i] {
+			coords[i][j] = coordinate{x: i, y: j}
+		}
+	}
+
+	return coords
+}
+
+func compareList(coord coordinate, fullArr [][]int) []coordinate {
+	dx := len(fullArr)
+	dy := len(fullArr[0])
+
+	if coord.x == 0 {
+		if coord.y == 0 {
+			coords := make([]coordinate, 2)
+			coords[0] = coordinate{x: coord.x, y: coord.y + 1} // down
+			coords[1] = coordinate{x: coord.x + 1, y: coord.y} // right
+
+			return coords
+		}
+
+		if coord.y == dy-1 {
+			coords := make([]coordinate, 2)
+			coords[0] = coordinate{x: coord.x, y: coord.y - 1} // up
+			coords[1] = coordinate{x: coord.x + 1, y: coord.y} // right
+
+			return coords
+		}
+
+		coords := make([]coordinate, 3)
+		coords[0] = coordinate{x: coord.x, y: coord.y - 1} // up
+		coords[1] = coordinate{x: coord.x, y: coord.y + 1} // down
+		coords[2] = coordinate{x: coord.x + 1, y: coord.y} // right
+
+		return coords
+	}
+
+	if coord.x == dx-1 {
+		if coord.y == 0 {
+			coords := make([]coordinate, 2)
+			coords[0] = coordinate{x: coord.x, y: coord.y + 1} // down
+			coords[1] = coordinate{x: coord.x - 1, y: coord.y} // left
+
+			return coords
+		}
+
+		if coord.y == dy-1 {
+			coords := make([]coordinate, 2)
+			coords[0] = coordinate{x: coord.x, y: coord.y - 1} // up
+			coords[1] = coordinate{x: coord.x - 1, y: coord.y} // left
+
+			return coords
+		}
+
+		coords := make([]coordinate, 3)
+		coords[0] = coordinate{x: coord.x, y: coord.y - 1} // up
+		coords[1] = coordinate{x: coord.x, y: coord.y + 1} // down
+		coords[2] = coordinate{x: coord.x - 1, y: coord.y} // left
+
+		return coords
+	}
+
+	if coord.y == 0 {
+		coords := make([]coordinate, 3)
+		coords[0] = coordinate{x: coord.x, y: coord.y + 1} // down
+		coords[1] = coordinate{x: coord.x - 1, y: coord.y} // left
+		coords[2] = coordinate{x: coord.x + 1, y: coord.y} // right
+
+		return coords
+	}
+
+	if coord.y == dy-1 {
+		coords := make([]coordinate, 3)
+		coords[0] = coordinate{x: coord.x, y: coord.y - 1} // up
+		coords[1] = coordinate{x: coord.x - 1, y: coord.y} // left
+		coords[2] = coordinate{x: coord.x + 1, y: coord.y} // right
+
+		return coords
+	}
+
+	coords := make([]coordinate, 4)
+
+	coords[0] = coordinate{x: coord.x, y: coord.y - 1} // up
+	coords[1] = coordinate{x: coord.x, y: coord.y + 1} // down
+	coords[2] = coordinate{x: coord.x - 1, y: coord.y} // left
+	coords[3] = coordinate{x: coord.x + 1, y: coord.y} // right
+
+	return coords
 }
