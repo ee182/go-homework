@@ -132,20 +132,9 @@ func computeLocalMinimum(fullArr [][]int, coords [][]coordinate) []int {
 	for i := range coords {
 		for j := range coords[i] {
 			list := compareList(coords[i][j], fullArr)
-
 			value := fullArr[coords[i][j].x][coords[i][j].y]
-			isLocalMin := true
 
-			for k := range list {
-				compareValue := fullArr[list[k].x][list[k].y]
-
-				if value > compareValue {
-					isLocalMin = false
-					break
-				}
-			}
-
-			if isLocalMin == true {
+			if smallerThanList(value, list, fullArr) {
 				ret = append(ret, value)
 			}
 		}
@@ -157,6 +146,18 @@ func computeLocalMinimum(fullArr [][]int, coords [][]coordinate) []int {
 type coordinate struct {
 	x int
 	y int
+}
+
+func smallerThanList(value int, list []coordinate, fullArr [][]int) bool {
+	for k := range list {
+		compareValue := fullArr[list[k].x][list[k].y]
+
+		if value > compareValue {
+			return false
+		}
+	}
+
+	return true
 }
 
 func makeCoordinate(a [][]int) [][]coordinate {
@@ -177,80 +178,23 @@ func compareList(coord coordinate, fullArr [][]int) []coordinate {
 	dx := len(fullArr)
 	dy := len(fullArr[0])
 
-	if coord.x == 0 {
-		if coord.y == 0 {
-			coords := make([]coordinate, 2)
-			coords[0] = coordinate{x: coord.x, y: coord.y + 1} // down
-			coords[1] = coordinate{x: coord.x + 1, y: coord.y} // right
+	coords := make([]coordinate, 0, 4)
 
-			return coords
-		}
-
-		if coord.y == dy-1 {
-			coords := make([]coordinate, 2)
-			coords[0] = coordinate{x: coord.x, y: coord.y - 1} // up
-			coords[1] = coordinate{x: coord.x + 1, y: coord.y} // right
-
-			return coords
-		}
-
-		coords := make([]coordinate, 3)
-		coords[0] = coordinate{x: coord.x, y: coord.y - 1} // up
-		coords[1] = coordinate{x: coord.x, y: coord.y + 1} // down
-		coords[2] = coordinate{x: coord.x + 1, y: coord.y} // right
-
-		return coords
+	if coord.y-1 >= 0 {
+		coords = append(coords, coordinate{x: coord.x, y: coord.y - 1}) // up
 	}
 
-	if coord.x == dx-1 {
-		if coord.y == 0 {
-			coords := make([]coordinate, 2)
-			coords[0] = coordinate{x: coord.x, y: coord.y + 1} // down
-			coords[1] = coordinate{x: coord.x - 1, y: coord.y} // left
-
-			return coords
-		}
-
-		if coord.y == dy-1 {
-			coords := make([]coordinate, 2)
-			coords[0] = coordinate{x: coord.x, y: coord.y - 1} // up
-			coords[1] = coordinate{x: coord.x - 1, y: coord.y} // left
-
-			return coords
-		}
-
-		coords := make([]coordinate, 3)
-		coords[0] = coordinate{x: coord.x, y: coord.y - 1} // up
-		coords[1] = coordinate{x: coord.x, y: coord.y + 1} // down
-		coords[2] = coordinate{x: coord.x - 1, y: coord.y} // left
-
-		return coords
+	if coord.y+1 < dy {
+		coords = append(coords, coordinate{x: coord.x, y: coord.y + 1}) // down
 	}
 
-	if coord.y == 0 {
-		coords := make([]coordinate, 3)
-		coords[0] = coordinate{x: coord.x, y: coord.y + 1} // down
-		coords[1] = coordinate{x: coord.x - 1, y: coord.y} // left
-		coords[2] = coordinate{x: coord.x + 1, y: coord.y} // right
-
-		return coords
+	if coord.x-1 >= 0 {
+		coords = append(coords, coordinate{x: coord.x - 1, y: coord.y}) // left
 	}
 
-	if coord.y == dy-1 {
-		coords := make([]coordinate, 3)
-		coords[0] = coordinate{x: coord.x, y: coord.y - 1} // up
-		coords[1] = coordinate{x: coord.x - 1, y: coord.y} // left
-		coords[2] = coordinate{x: coord.x + 1, y: coord.y} // right
-
-		return coords
+	if coord.x+1 < dx {
+		coords = append(coords, coordinate{x: coord.x + 1, y: coord.y}) // right
 	}
-
-	coords := make([]coordinate, 4)
-
-	coords[0] = coordinate{x: coord.x, y: coord.y - 1} // up
-	coords[1] = coordinate{x: coord.x, y: coord.y + 1} // down
-	coords[2] = coordinate{x: coord.x - 1, y: coord.y} // left
-	coords[3] = coordinate{x: coord.x + 1, y: coord.y} // right
 
 	return coords
 }
