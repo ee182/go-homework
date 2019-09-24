@@ -125,34 +125,63 @@ func ValueEqIndex(a []int, idx []int) (bool, int) {
 // 4.
 func ComputeLocalMinimum(fullArr [][]int) []int {
 	coords := makeCoordinate(fullArr)
+
 	return computeLocalMinimum(fullArr, coords)
 }
 
 func computeLocalMinimum(fullArr [][]int, coords [][]coordinate) []int {
-	e, o := splitEvenOdd(coords)
+	if len(coords[0]) == 1 {
+		list := compareList(coords[0][0], fullArr)
+		value := fullArr[coords[0][0].x][coords[0][0].y]
 
-	even := reallyComputeLocalMinimum(fullArr, e)
-	odd := reallyComputeLocalMinimum(fullArr, o)
+		ret := []int{}
 
-	return append(even, odd...)
-}
-
-func reallyComputeLocalMinimum(fullArr [][]int, coords [][]coordinate) []int {
-	ret := make([]int, 0, 0)
-
-	for i := range coords {
-		for j := range coords[i] {
-			list := compareList(coords[i][j], fullArr)
-			value := fullArr[coords[i][j].x][coords[i][j].y]
-
-			if smallerThanList(value, list, fullArr) {
-				ret = append(ret, value)
-			}
+		if smallerThanList(value, list, fullArr) {
+			ret = append(ret, value)
 		}
+
+		return ret
+	}
+
+	e1, o1 := splitEvenOdd(coords)
+	e2, o2 := splitOddEven(coords)
+
+	even1 := computeLocalMinimum(fullArr, e1)
+	odd1 := computeLocalMinimum(fullArr, o1)
+	even2 := computeLocalMinimum(fullArr, e2)
+	odd2 := computeLocalMinimum(fullArr, o2)
+
+	ret := []int{}
+	all := [][]int{
+		even1,
+		odd1,
+		even2,
+		odd2,
+	}
+
+	for _, m := range all {
+		ret = append(ret, m...)
 	}
 
 	return ret
 }
+
+// func reallyComputeLocalMinimum(fullArr [][]int, coords [][]coordinate) []int {
+// 	ret := make([]int, 0, 0)
+
+// 	for i := range coords {
+// 		for j := range coords[i] {
+// 			list := compareList(coords[i][j], fullArr)
+// 			value := fullArr[coords[i][j].x][coords[i][j].y]
+
+// 			if smallerThanList(value, list, fullArr) {
+// 				ret = append(ret, value)
+// 			}
+// 		}
+// 	}
+
+// 	return ret
+// }
 
 type coordinate struct {
 	x int
