@@ -1,12 +1,19 @@
 package sortalgorithm
 
+import (
+	"math/rand"
+	"time"
+)
+
+var r = rand.New(rand.NewSource(time.Now().Unix()))
+
 // QuickSort sorts the array of integers by an randomized algorithm
 func QuickSort(xs []int) {
 	if len(xs) <= 1 {
 		return
 	}
 
-	pivotIdx := 0
+	pivotIdx := r.Intn(len(xs))
 
 	p := partition(xs, pivotIdx)
 	QuickSort(xs[0:p])
