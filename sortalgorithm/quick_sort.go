@@ -15,20 +15,20 @@ func QuickSort(xs []int) {
 
 func partition(xs []int, pivotIdx int) int {
 	pivot := xs[pivotIdx]
-	i := -1
+	i := 0
 
-	swap(xs, pivotIdx, len(xs)-1)
+	swap(xs, pivotIdx, 0)
 
-	for j := 0; j < len(xs)-1; j++ {
+	for j := 1; j < len(xs); j++ {
 		if xs[j] < pivot {
 			swap(xs, i+1, j)
 			i++
 		}
 	}
 
-	swap(xs, i+1, len(xs)-1)
+	swap(xs, i, 0)
 
-	return i + 1
+	return i
 }
 
 func swap(xs []int, i int, j int) {
