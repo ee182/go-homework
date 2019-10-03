@@ -8,6 +8,23 @@ import (
 	"strings"
 )
 
+// Test3 is used to test the probability of sortalgorithm.QuickSort()
+// func Test3() {
+// 	trueCnt := 0
+// 	totalCnt := 1000000
+// 	for i := 0; i < totalCnt; i++ {
+// 		numbers := []int{6, 2, 5, 1, 4, 8, 3, 7}
+// 		compared36 = false
+// 		QuickSort(numbers)
+
+// 		if compared36 == true {
+// 			trueCnt++
+// 		}
+// 	}
+
+// 	fmt.Println(float32(trueCnt) / float32(totalCnt))
+// }
+
 // Test2 is used to test sortalgorithm.QuickSort()
 func Test2() {
 	f, err := os.Open("QuickSortNumbers.txt")
