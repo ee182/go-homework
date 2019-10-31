@@ -2,101 +2,169 @@ package main
 
 import (
 	"fmt"
-	"math/cmplx"
 )
 
-// Those are my factored var
+func f() int {
+	fmt.Println("i AM F")
+
+	return 2
+}
+
+func old() {
+	// fmt.Println("When's Saturday?")
+	// today := time.Now().Weekday()
+	// switch time.Saturday {
+	// case today + 0:
+	// 	fmt.Println("Today.")
+	// case today + 1:
+	// 	fmt.Println("Tomorrow.")
+	// case today + 2:
+	// 	fmt.Println("In two days.")
+	// default:
+	// 	fmt.Println("Too far away.")
+	// }
+
+	// t := time.Now()
+	// switch {
+	// case t.Hour() < 12:
+	// 	fmt.Println("Good morning!")
+	// case t.Hour() < 17:
+	// 	fmt.Println("Good afternoon.")
+	// default:
+	// 	fmt.Println("Good evening.")
+	// }
+
+	i := 5
+	defer fmt.Println(i)
+	defer fmt.Print("world, i am ")
+
+	i = 10
+
+	fmt.Println("hello")
+}
+
+// Vertex is for testing
+type Vertex struct {
+	X, Y int
+}
+
 var (
-	ToBe   bool       = false
-	MaxInt uint64     = 1<<64 - 1
-	z      complex128 = cmplx.Sqrt(-5 + 12i)
+	v1 = Vertex{1, 2}   // has type Vertex
+	v2 = Vertex{Y: 182} // X:0 is implicit
+	v3 = Vertex{}       // X:0 and Y:0
+	p  = &Vertex{1, 2}  // has type *Vertex
 )
-
-// Pi is for test
-const (
-	Pi = 3.14
-)
-
-// Those are for test, too
-const (
-	// Shift it right again 99 places, so we end up with 1<<1, or 2.
-	Small = Big >> 99
-)
-
-// Big is for creatig a huge number by shifting a 1 bit left 100 places.
-// In other words, the binary number that is 1 followed by 100 zeroes.
-const Big = 1 << 100
-
-func needInt(x int) int {
-	return x*10 + 1
-}
-
-func needFloat(x float64) float64 {
-	return x * 0.1
-}
 
 func main() {
-	// rand.Seed(time.Now().Unix())
-	// fmt.Println("My favorite number is", rand.Intn(10))
-	// sortalgorithm.Test2()
-	// myfolder01.TestPkg()
-	// mypackage02.TestAaaaa()
+	// var a [6]string = [6]string{"i", "am", "robot", "you", "know", "?"}
+	// a[0] = "Hello"
+	// a[1] = "World"
+	// fmt.Println(a[0], a[1])
+	// fmt.Println(a)
+	// fmt.Println(a[2:6])
 
-	// fmt.Println(add(42.5, 13.8))
+	// primes := [6]int{2, 3, 5, 7, 11, 13}
+	// fmt.Println(primes)
 
-	// a, b := swap("hello", "world")
-	// fmt.Println(a, b)
+	// s := primes[1:4]
+	// fmt.Println(s)
 
-	// fmt.Println(split(17))
+	// q := []int{2, 3, 5, 7, 11, 13}
+	// fmt.Println(q)
 
-	// var i, j int = 1, 2
-	// k := 3
-	// c, python, java := true, false, "no!"
+	// r := []bool{true, false, true, true, false, true}
+	// fmt.Println(r)
 
-	// fmt.Println(i, j, k, c, python, java)
+	// s := []struct {
+	// 	i int
+	// 	b bool
+	// }{
+	// 	{2, true},
+	// 	{3, false},
+	// 	{5, true},
+	// 	{7, true},
+	// 	{11, false},
+	// 	{13, true},
+	// }
+	// fmt.Println(s)
 
-	// fmt.Printf("Type: %T Value: %v\n", ToBe, ToBe)
-	// fmt.Printf("Type: %T Value: %v\n", MaxInt, MaxInt)
-	// fmt.Printf("Type: %T Value: %v\n", z, z)
+	// s := []int{2, 3, 5, 7, 11, 13}
 
-	// var i int
-	// var f float64
-	// var b bool
-	// var s string
-	// fmt.Printf("%v %v %v %q\n", i, f, b, s)
+	// s = s[1:4]
+	// fmt.Println(s)
 
-	// var x, y int = 3, 4
-	// f := math.Sqrt(float64(x*x + y*y))
-	// z := uint(f)
-	// fmt.Println(x, y, z)
+	// s = s[:2]
+	// fmt.Println(s)
 
-	// v := 0.867 + 0.5i // change me!
-	// fmt.Printf("v is of type %T\n", v)
+	// s = s[1:]
+	// fmt.Println(s)
 
-	// const World = "世界"
-	// fmt.Println("Hello", World)
-	// fmt.Println("Happy", Pi, "Day")
+	// s := []int{2, 3, 5, 7, 11, 13}
+	// printSlice(s)
 
-	// const Truth = true
-	// fmt.Println("Go rules?", Truth)
+	// // Slice the slice to give it zero length.
+	// s = s[:0]
+	// printSlice(s)
 
-	fmt.Println(needInt(Small))
-	fmt.Println(needFloat(Small))
-	fmt.Println(needFloat(Big))
-	// fmt.Println(needInt(Big))
+	// // Extend its length.
+	// s = s[:4]
+	// printSlice(s)
+
+	// // Drop its first two values.
+	// s = s[2:]
+	// printSlice(s)
+
+	// var s []int
+	// fmt.Println(s, len(s), cap(s))
+	// if s == nil {
+	// 	fmt.Println("nil!")
+	// }
+
+	// Create a tic-tac-toe board.
+	// board := [][]string{
+	// 	[]string{"_", "_", "_"},
+	// 	[]string{"_", "_", "_"},
+	// 	[]string{"_", "_", "_"},
+	// }
+
+	// // The players take turns.
+	// board[0][0] = "X"
+	// board[2][2] = "O"
+	// board[1][2] = "X"
+	// board[1][0] = "O"
+	// board[0][2] = "X"
+
+	// for i := 0; i < len(board); i++ {
+	// 	fmt.Printf("%s\n", strings.Join(board[i], " "))
+	// }
+
+	var s []int
+	printSlice(s)
+
+	// append works on nil slices.
+	s = append(s, 0)
+	printSlice(s)
+
+	// The slice grows as needed.
+	s = append(s, 1)
+	printSlice(s)
+
+	// We can add more than one element at a time.
+	s = append(s, 2, 3, 4)
+	printSlice(s)
+
+	appendMe := []int{5, 6, 7, 8, 9, 10}
+
+	s = append(s, appendMe...)
+
+	printSlice(s)
 }
 
-func add(x, y float32) float32 {
-	return x + y
-}
+// func printSlice(s string, x []int) {
+// 	fmt.Printf("%s len=%d cap=%d %v\n",
+// 		s, len(x), cap(x), x)
+// }
 
-func swap(x, y string) (string, string) {
-	return y, x
-}
-
-func split(sum int) (x, y int) {
-	x = sum * 4 / 9
-	y = sum - x
-
-	return x, y
+func printSlice(s []int) {
+	fmt.Printf("len=%d cap=%d %v\n", len(s), cap(s), s)
 }
