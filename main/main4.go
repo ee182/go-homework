@@ -43,19 +43,19 @@ func old() {
 	fmt.Println("hello")
 }
 
-// Vertex is for testing
-type Vertex struct {
-	X, Y int
-}
+// // Vertex is for testing
+// type Vertex struct {
+// 	X, Y int
+// }
 
-var (
-	v1 = Vertex{1, 2}   // has type Vertex
-	v2 = Vertex{Y: 182} // X:0 is implicit
-	v3 = Vertex{}       // X:0 and Y:0
-	p  = &Vertex{1, 2}  // has type *Vertex
-)
+// var (
+// 	v1 = Vertex{1, 2}   // has type Vertex
+// 	v2 = Vertex{Y: 182} // X:0 is implicit
+// 	v3 = Vertex{}       // X:0 and Y:0
+// 	p  = &Vertex{1, 2}  // has type *Vertex
+// )
 
-func main() {
+func main4() {
 	// var a [6]string = [6]string{"i", "am", "robot", "you", "know", "?"}
 	// a[0] = "Hello"
 	// a[1] = "World"
