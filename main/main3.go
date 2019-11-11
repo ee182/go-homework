@@ -7,11 +7,12 @@ import (
 
 // Pow is for demo
 func Pow(x, n, lim float64) float64 {
-	if v := math.Pow(x, n); v < lim {
+	v := math.Pow(x, n)
+	if v < lim {
 		return v
-	} else {
-		fmt.Printf("%g >= %g\n", v, lim)
 	}
+
+	fmt.Printf("%g >= %g\n", v, lim)
 
 	return lim
 }

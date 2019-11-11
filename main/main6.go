@@ -5,12 +5,15 @@ import (
 	"math"
 )
 
+// I is a demo
 type I interface{}
 
+// Vertex is a demo
 type Vertex struct {
 	X, Y float64
 }
 
+// Abs is a demo
 func (v *Vertex) Abs() float64 {
 	return math.Sqrt(v.X*v.X + v.Y*v.Y)
 }
