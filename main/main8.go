@@ -31,7 +31,7 @@ func (im *Image) At(x, y int) color.Color {
 	return color.RGBA{uint8(v), uint8(v), 255, 255}
 }
 
-func main() {
+func main8() {
 	m := &Image{}
 	pic.ShowImage(m)
 }
