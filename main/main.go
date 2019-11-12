@@ -2,47 +2,84 @@ package main
 
 import (
 	"fmt"
-	"sync"
-	"time"
 )
 
-// SafeCounter is a demo
-type SafeCounter struct {
-	v   map[string]int
-	mux sync.Mutex
+type Fetcher interface {
+	// Fetch returns the body of URL and
+	// a slice of URLs found on that page.
+	Fetch(url string) (body string, urls []string, err error)
 }
 
-// Inc is a demo
-func (c *SafeCounter) Inc(key string) {
-	c.mux.Lock()
-	defer c.mux.Unlock()
-
-	c.v[key]++
-}
-
-// Value is a demo
-func (c *SafeCounter) Value(key string) int {
-	c.mux.Lock()
-	defer c.mux.Unlock()
-
-	return c.v[key]
+// Crawl uses fetcher to recursively crawl
+// pages starting with url, to a maximum of depth.
+func Crawl(url string, depth int, fetcher Fetcher) {
+	// TODO: Fetch URLs in parallel.
+	// TODO: Don't fetch the same URL twice.
+	// This implementation doesn't do either:
+	if depth <= 0 {
+		return
+	}
+	body, urls, err := fetcher.Fetch(url)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	fmt.Printf("found: %s %q\n", url, body)
+	for _, u := range urls {
+		Crawl(u, depth-1, fetcher)
+	}
+	return
 }
 
 func main() {
-	c := SafeCounter{v: make(map[string]int)}
+	Crawl("https://golang.org/", 4, fetcher)
+}
 
-	for i := 0; i < 100000; i++ {
-		go c.Inc("somekey1")
-		go c.Inc("somekey2")
-		go c.Inc("somekey3")
-		go c.Inc("somekey4")
-		go c.Inc("somekey5")
+// fakeFetcher is Fetcher that returns canned results.
+type fakeFetcher map[string]*fakeResult
+
+type fakeResult struct {
+	body string
+	urls []string
+}
+
+func (f fakeFetcher) Fetch(url string) (string, []string, error) {
+	if res, ok := f[url]; ok {
+		return res.body, res.urls, nil
 	}
+	return "", nil, fmt.Errorf("not found: %s", url)
+}
 
-	time.Sleep(time.Second)
-	fmt.Println(c.Value("somekey1"))
-	fmt.Println(c.Value("somekey2"))
-	fmt.Println(c.Value("somekey3"))
-	fmt.Println(c.Value("somekey4"))
-	fmt.Println(c.Value("somekey5"))
+// fetcher is a populated fakeFetcher.
+var fetcher = fakeFetcher{
+	"https://golang.org/": &fakeResult{
+		"The Go Programming Language",
+		[]string{
+			"https://golang.org/pkg/",
+			"https://golang.org/cmd/",
+		},
+	},
+	"https://golang.org/pkg/": &fakeResult{
+		"Packages",
+		[]string{
+			"https://golang.org/",
+			"https://golang.org/cmd/",
+			"https://golang.org/pkg/fmt/",
+			"https://golang.org/pkg/os/",
+		},
+	},
+	"https://golang.org/pkg/fmt/": &fakeResult{
+		"Package fmt",
+		[]string{
+			"https://golang.org/",
+			"https://golang.org/pkg/",
+		},
+	},
+	"https://golang.org/pkg/os/": &fakeResult{
+		"Package os",
+		[]string{
+			"https://golang.org/",
+			"https://golang.org/pkg/",
+		},
+	},
 }
